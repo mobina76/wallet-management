@@ -28,6 +28,7 @@ export class WalletApi{
    ];
    return of(wallets).pipe(
      delay(800)
-   )
+   );
+
   }
 }

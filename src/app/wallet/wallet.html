@@ -1,8 +1,29 @@
-<div class="p-6">
-  <h1 class="text-2xl font-semibold">Wallets</h1>
-  @if (walletStore.state().isLoading){
-    <p>Loading ..</p>
-  } @else {
-    <p>all wallets : {{walletStore.state().wallets.length}} </p>
-  }
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+<!--  <h3 class="text-2xl font-semibold">Wallets</h3>-->
+    @for (wallet of walletStore.state().wallets; track wallet.id) {
+        <div class="rounded-xl border p-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">
+              {{ wallet.name }}
+            </h2>
+
+            <span class="text-sm">
+        {{ wallet.isActive ? 'Active' : 'Inactive' }}
+      </span>
+          </div>
+
+          <div class="mt-4 space-y-2">
+            <p>
+              Currency:
+              <span class="font-medium">{{ wallet.currency }}</span>
+            </p>
+
+            <p>
+              Balance:
+              <span class="font-medium">{{ wallet.balance }}</span>
+            </p>
+          </div>
+        </div>
+      }
+
 </div>
