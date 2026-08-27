@@ -1,4 +1,21 @@
-<div class="mb-4 flex justify-end">
+<div class="mb-4 flex items-center justify-between gap-4">
+  <select
+    class="rounded-lg border px-3 py-2"
+    (change)="walletStore.setCurrencyFilter($any($event.target).value)"
+  >
+    <option value="ALL">All currencies</option>
+    <option value="EUR">EUR</option>
+    <option value="USD">USD</option>
+    <option value="IRR">IRR</option>
+  </select>
+  <select
+    class="rounded-lg border px-3 py-2"
+    (change)="walletStore.setStatusFilter($any($event.target).value)"
+  >
+    <option value="ALL">All status</option>
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </select>
   <button
     type="button"
     class="rounded-lg border px-4 py-2"
@@ -9,7 +26,7 @@
 </div>
 
 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-  @for (wallet of walletStore.state().wallets; track wallet.id) {
+  @for (wallet of walletStore.filteredWallets(); track wallet.id) {
     <div   walletCurrency
            [currency]="wallet.currency" class="rounded-xl border p-4" >
       <div class="flex items-center justify-between">
