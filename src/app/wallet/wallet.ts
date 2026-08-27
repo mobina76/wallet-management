@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { WalletStore } from './store/wallet-store';
 
 @Component({
@@ -10,5 +10,9 @@ import { WalletStore } from './store/wallet-store';
 })
 export class Wallet {
   readonly walletStore =  inject(WalletStore);
+  readonly showBalance = signal(true);
 
+  toggleBalance(){
+    this.showBalance.update((show)=> !show);
+  }
 }

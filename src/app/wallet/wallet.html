@@ -1,29 +1,43 @@
-<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-<!--  <h3 class="text-2xl font-semibold">Wallets</h3>-->
-    @for (wallet of walletStore.state().wallets; track wallet.id) {
-        <div class="rounded-xl border p-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold">
-              {{ wallet.name }}
-            </h2>
+<div class="mb-4 flex justify-end">
+  <button
+    type="button"
+    class="rounded-lg border px-4 py-2"
+    (click)="toggleBalance()"
+  >
+    {{ showBalance() ? 'Hide balance' : 'Show balance' }}
+  </button>
+</div>
 
-            <span class="text-sm">
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+  <!--  <h3 class="text-2xl font-semibold">Wallets</h3>-->
+  @for (wallet of walletStore.state().wallets; track wallet.id) {
+    <div class="rounded-xl border p-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">
+          {{ wallet.name }}
+        </h2>
+
+        <span class="text-sm">
         {{ wallet.isActive ? 'Active' : 'Inactive' }}
       </span>
-          </div>
+      </div>
 
-          <div class="mt-4 space-y-2">
-            <p>
-              Currency:
-              <span class="font-medium">{{ wallet.currency }}</span>
-            </p>
+      <div class="mt-4 space-y-2">
+        <p>
+          Currency:
+          <span class="font-medium">{{ wallet.currency }}</span>
+        </p>
 
-            <p>
-              Balance:
-              <span class="font-medium">{{ wallet.balance }}</span>
-            </p>
-          </div>
-        </div>
-      }
+        <p>
+          Balance:
+          @if (showBalance()) {
+            <span class="font-medium">{{ wallet.balance }}</span>
+          } @else {
+            <span class="font-medium">...</span>
+          }
+        </p>
+      </div>
+    </div>
+  }
 
 </div>
