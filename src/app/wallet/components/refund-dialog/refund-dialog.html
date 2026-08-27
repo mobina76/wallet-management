@@ -1,0 +1,19 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+  <div class="w-full max-w-md rounded-xl bg-white p-6">
+    <h2 class="text-xl font-semibold">
+      Request Refund
+    </h2>
+
+    <p class="mt-2 text-sm">
+      Wallet: {{ wallet().name }}
+    </p>
+    <button
+      type="button"
+      class="mt-4 rounded-lg border px-4 py-2"
+      (click)="close.emit()"
+    >
+      Cancel
+    </button>
+  </div>
+
+</div>

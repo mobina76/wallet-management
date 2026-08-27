@@ -53,7 +53,18 @@
           }
         </p>
       </div>
+      @if (wallet.isActive) {
+        <button
+          type="button"
+          class="mt-4 rounded-lg border px-4 py-2"
+          (click)="selectWallet(wallet)"
+        >
+          Refund
+        </button>
+      }
     </div>
   }
-
+  @if (selectedWallet(); as wallet) {
+    <app-refund-dialog [wallet]="wallet" (close)="selectedWallet.set(null)"/>
+  }
 </div>
