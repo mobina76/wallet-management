@@ -1,6 +1,7 @@
 import { Wallet } from '../models/wallet.model';
 import { inject, Service, signal } from '@angular/core';
 import { WalletApi } from '../services/wallet-api';
+import { readonly } from '@angular/forms/signals';
 
 interface WalletState {
   wallets: Wallet[];
@@ -15,6 +16,7 @@ export class WalletStore {
     isLoading: false,
     error: false,
   });
+  readonly state = this.store.asReadonly();
   constructor() {
     this.loadWallets();
   }
