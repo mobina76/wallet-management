@@ -7,6 +7,109 @@
     <p class="mt-2 text-sm">
       Wallet: {{ wallet().name }}
     </p>
+    <form [formGroup]="refundForm" class="mt-4" >
+      <p class="mb-2 font-medium">Refund Type</p>
+      <label>
+        <input
+          type="radio"
+          value="online"
+          formControlName="type"
+        />
+        Online
+      </label>
+      <label>
+      <input
+        type="radio"
+        value="physical"
+        formControlName="type"
+      />
+        Physical
+    </label>
+      <div class="mt-4">
+        <label
+          for="amount"
+          class="mb-1 block font-medium"
+        >
+          Amount
+        </label>
+
+        <input
+          id="amount"
+          type="number"
+          step="0.01"
+          formControlName="amount"
+          class="w-full rounded-lg border px-3 py-2"
+        />
+         @let amount = refundForm.controls.amount;
+        @if (amount.touched) {
+          @if (amount.hasError('required')) {
+            <p class="mt-1 text-sm text-red-600">
+              Amount is required.
+            </p>
+          }
+
+          @if (amount.hasError('positiveAmount')) {
+            <p class="mt-1 text-sm text-red-600">
+              Amount must be greater than zero.
+            </p>
+          }
+
+          @if (amount.hasError('lessThanBalance')) {
+            <p class="mt-1 text-sm text-red-600">
+              Amount must be less than wallet balance.
+            </p>
+          }
+        }
+      </div>
+      <div class="mt-4">
+        <label
+          for="reason"
+          class="mb-1 block font-medium"
+        >
+          Reason
+        </label>
+
+        <textarea
+          id="reason"
+          formControlName="reason"
+          class="w-full rounded-lg border px-3 py-2"
+        ></textarea>
+      </div>
+      @let reason = refundForm.controls.reason;
+      @if (reason.touched && reason.hasError('required')){
+        <p class="mt-1 text-sm text-red-600">
+          reason is required
+        </p>
+
+      }
+      @if (refundForm.controls.type.value === 'physical') {
+        <div class="mt-4">
+          <label
+            for="shippingAddress"
+            class="mb-1 block font-medium"
+          >
+            Shipping Address
+          </label>
+
+          <textarea
+            id="shippingAddress"
+            formControlName="shippingAddress"
+            class="w-full rounded-lg border px-3 py-2"
+          ></textarea>
+
+          @let shippingAddress = refundForm.controls.shippingAddress;
+
+          @if (
+            shippingAddress.touched &&
+            shippingAddress.hasError('required')
+            ) {
+            <p class="mt-1 text-sm text-red-600">
+              Shipping Address is required.
+            </p>
+          }
+        </div>
+      }
+    </form>
     <button
       type="button"
       class="mt-4 rounded-lg border px-4 py-2"

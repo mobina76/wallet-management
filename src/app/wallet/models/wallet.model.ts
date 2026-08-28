@@ -1,6 +1,6 @@
 export type WalletCurrency = 'EUR' | 'USD' | 'IRR';
 export type WalletStatus = 'active' | 'inactive';
-export interface Wallet {
+export interface WalletModel {
   id: string;
   name: string;
   currency: WalletCurrency;

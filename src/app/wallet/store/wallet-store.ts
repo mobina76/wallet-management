@@ -1,10 +1,10 @@
-import { Wallet, WalletFilters } from '../models/wallet.model';
+import { WalletModel, WalletFilters } from '../models/wallet.model';
 import { computed, inject, Service, signal } from '@angular/core';
 import { WalletApi } from '../services/wallet-api';
 import { readonly } from '@angular/forms/signals';
 
 interface WalletState {
-  wallets: Wallet[];
+  wallets: WalletModel[];
   isLoading: boolean;
   error: boolean;
   filters: WalletFilters;

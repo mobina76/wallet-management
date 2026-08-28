@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Wallet } from './wallet/wallet';
+import { Wallet } from './wallet/components/wallet-component/wallet';
 
 @Component({
   imports: [RouterOutlet, Wallet],

@@ -1,11 +1,11 @@
 import { Service } from '@angular/core';
 import { delay, Observable, of } from 'rxjs';
-import { Wallet } from '../models/wallet.model';
+import { WalletModel } from '../models/wallet.model';
 
 @Service()
 export class WalletApi{
-  getWallets(): Observable<Wallet[]>{
-   const wallets: Wallet[] = [
+  getWallets(): Observable<WalletModel[]>{
+   const wallets: WalletModel[] = [
      {
        id: '1',
        name: 'EUR Wallet',
