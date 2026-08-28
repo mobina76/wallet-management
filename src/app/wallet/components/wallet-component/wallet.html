@@ -64,7 +64,14 @@
       }
     </div>
   }
+  @if (refundSuccess()){
+    <p class="mb-4 rounded-lg border p-3">
+      Refund Submitted Seccessfully
+    </p>
+  }
   @if (selectedWallet(); as wallet) {
-    <app-refund-dialog [wallet]="wallet" (close)="selectedWallet.set(null)"/>
+    <app-refund-dialog [wallet]="wallet"
+                       (success)="handleRefundSuccess()"
+                       (close)="selectedWallet.set(null)"/>
   }
 </div>

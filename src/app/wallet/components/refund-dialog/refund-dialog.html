@@ -7,9 +7,12 @@
     <p class="mt-2 text-sm">
       Wallet: {{ wallet().name }}
     </p>
-    <form [formGroup]="refundForm" class="mt-4" >
+    <form [formGroup]="refundForm"
+          class="mt-4"
+          (ngSubmit)="submitRefund()"
+    >
       <p class="mb-2 font-medium">Refund Type</p>
-      <label>
+      <label class="mr-4">
         <input
           type="radio"
           value="online"
@@ -36,7 +39,6 @@
         <input
           id="amount"
           type="number"
-          step="0.01"
           formControlName="amount"
           class="w-full rounded-lg border px-3 py-2"
         />
@@ -74,14 +76,15 @@
           formControlName="reason"
           class="w-full rounded-lg border px-3 py-2"
         ></textarea>
-      </div>
-      @let reason = refundForm.controls.reason;
-      @if (reason.touched && reason.hasError('required')){
-        <p class="mt-1 text-sm text-red-600">
-          reason is required
-        </p>
 
-      }
+        @let reason = refundForm.controls.reason;
+
+        @if (reason.touched && reason.hasError('required')) {
+          <p class="mt-1 text-sm text-red-600">
+            Reason is required.
+          </p>
+        }
+      </div>
       @if (refundForm.controls.type.value === 'physical') {
         <div class="mt-4">
           <label
@@ -109,14 +112,25 @@
           }
         </div>
       }
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="mt-4 rounded-lg border px-4 py-2"
+          (click)="close.emit()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="mt-4 rounded-lg border px-4 py-2"
+          [disabled]="isSubmit()"
+        >
+          {{ isSubmit()? 'Please wait..':'Refund'}}
+        </button>
+      </div>
+
     </form>
-    <button
-      type="button"
-      class="mt-4 rounded-lg border px-4 py-2"
-      (click)="close.emit()"
-    >
-      Cancel
-    </button>
+
   </div>
 
 </div>
