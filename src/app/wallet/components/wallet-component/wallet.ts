@@ -3,9 +3,10 @@ import { WalletStore } from '../../store/wallet-store';
 import { WalletCurrencyDirective } from '../../directives/wallet-currency.directive';
 import { WalletModel } from '../../models/wallet.model';
 import { RefundDialog } from '../refund-dialog/refund-dialog';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
-  imports: [WalletCurrencyDirective, RefundDialog],
+  imports: [WalletCurrencyDirective, RefundDialog, CurrencyPipe],
   selector: 'app-wallet',
   styleUrl: './wallet.css',
   templateUrl: './wallet.html',
@@ -14,7 +15,7 @@ import { RefundDialog } from '../refund-dialog/refund-dialog';
 export class Wallet {
   readonly walletStore = inject(WalletStore);
   readonly showBalance = signal(true);
-  readonly refundSuccess = signal(false)
+  readonly refundSuccess = signal(false);
   readonly selectedWallet = signal<WalletModel | null>(null);
 
   toggleBalance() {
@@ -23,8 +24,8 @@ export class Wallet {
   selectWallet(wallet: WalletModel) {
     this.selectedWallet.set(wallet);
   }
-  handleRefundSuccess():void {
+  handleRefundSuccess(): void {
     this.refundSuccess.set(true);
-    this.selectedWallet.set(null)
+    this.selectedWallet.set(null);
   }
 }

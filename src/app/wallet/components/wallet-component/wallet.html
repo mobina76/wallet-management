@@ -77,7 +77,7 @@
               <p>
                 Balance:
                 @if (showBalance()) {
-                  <span class="font-medium">{{ wallet.balance }}</span>
+                  <span class="font-medium">{{ wallet.balance | currency: wallet.currency }}</span>
                 } @else {
                   <span class="font-medium">...</span>
                 }
