@@ -4,9 +4,10 @@ import { WalletCurrencyDirective } from '../../directives/wallet-currency.direct
 import { WalletModel } from '../../models/wallet.model';
 import { RefundDialog } from '../refund-dialog/refund-dialog';
 import { CurrencyPipe } from '@angular/common';
+import { FormField } from '@angular/forms/signals';
 
 @Component({
-  imports: [WalletCurrencyDirective, RefundDialog, CurrencyPipe],
+  imports: [WalletCurrencyDirective, RefundDialog, CurrencyPipe, FormField],
   selector: 'app-wallet',
   styleUrl: './wallet.css',
   templateUrl: './wallet.html',

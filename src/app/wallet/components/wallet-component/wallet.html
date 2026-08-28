@@ -1,22 +1,20 @@
-@if (walletStore.walletsResource.isLoading()){
+@if (walletStore.walletsResource.isLoading()) {
   <div class="rounded-lg border p-4 text-center">
     loading wallets...
   </div>
-} @else if (walletStore.walletsResource.error()){
+} @else if (walletStore.walletsResource.error()) {
   <div class="rounded-lg border p-4 text-center text-red-600">
     <p>Failed to load wallets</p>
     <button
-    type="button"
-    class="mt-2 underline"
-    (click)="walletStore.walletsResource.reload()"
+      type="button"
+      class="mt-2 underline"
+      (click)="walletStore.walletsResource.reload()"
     >
       Retry
     </button>
   </div>
-} @else if (
-  walletStore.walletsResource.hasValue() &&
-  walletStore.walletsResource.value().length === 0
-  ) {
+} @else if (walletStore.walletsResource.hasValue() &&
+walletStore.walletsResource.value().length === 0) {
   <div class="rounded-lg border p-4 text-center text-gray-500">
     No wallets available.
   </div>
@@ -24,7 +22,7 @@
   <div class="mb-4 flex items-center justify-between gap-4">
     <select
       class="rounded-lg border px-3 py-2"
-      (change)="walletStore.setCurrencyFilter($any($event.target).value)"
+      [formField]="walletStore.filterForm.currency"
     >
       <option value="ALL">All currencies</option>
       <option value="EUR">EUR</option>
@@ -33,7 +31,7 @@
     </select>
     <select
       class="rounded-lg border px-3 py-2"
-      (change)="walletStore.setStatusFilter($any($event.target).value)"
+      [formField]="walletStore.filterForm.status"
     >
       <option value="ALL">All status</option>
       <option value="active">Active</option>
@@ -51,50 +49,50 @@
   @if (walletStore.filteredWallets().length === 0) {
 
     <div class="rounded-lg border p-4 text-center text-gray-500">
-      No wallets match with  your filters.
+      No wallets match with your filters.
     </div>
 
   } @else {
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        @for (wallet of walletStore.filteredWallets(); track wallet.id) {
-          <div walletCurrency
-               [currency]="wallet.currency" class="rounded-xl border p-4">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">
-                {{ wallet.name }}
-              </h2>
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      @for (wallet of walletStore.filteredWallets(); track wallet.id) {
+        <div walletCurrency
+             [currency]="wallet.currency" class="rounded-xl border p-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">
+              {{ wallet.name }}
+            </h2>
 
-              <span class="text-sm">
+            <span class="text-sm">
         {{ wallet.isActive ? 'Active' : 'Inactive' }}
       </span>
-            </div>
-
-            <div class="mt-4 space-y-2">
-              <p>
-                Currency:
-                <span class="font-medium">{{ wallet.currency }}</span>
-              </p>
-              <p>
-                Balance:
-                @if (showBalance()) {
-                  <span class="font-medium">{{ wallet.balance | currency: wallet.currency }}</span>
-                } @else {
-                  <span class="font-medium">...</span>
-                }
-              </p>
-            </div>
-            @if (wallet.isActive) {
-              <button
-                type="button"
-                class="mt-4 rounded-lg border px-4 py-2"
-                (click)="selectWallet(wallet)"
-              >
-                Refund
-              </button>
-            }
           </div>
-        }
-      </div>
+
+          <div class="mt-4 space-y-2">
+            <p>
+              Currency:
+              <span class="font-medium">{{ wallet.currency }}</span>
+            </p>
+            <p>
+              Balance:
+              @if (showBalance()) {
+                <span class="font-medium">{{ wallet.balance | currency: wallet.currency }}</span>
+              } @else {
+                <span class="font-medium">••••••</span>
+              }
+            </p>
+          </div>
+          @if (wallet.isActive) {
+            <button
+              type="button"
+              class="mt-4 rounded-lg border px-4 py-2"
+              (click)="selectWallet(wallet)"
+            >
+              Refund
+            </button>
+          }
+        </div>
+      }
+    </div>
   }
   @if (refundSuccess()) {
     <p class="mb-4 rounded-lg border p-3">
