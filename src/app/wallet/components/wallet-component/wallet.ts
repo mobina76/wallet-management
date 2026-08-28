@@ -3,7 +3,6 @@ import { WalletStore } from '../../store/wallet-store';
 import { WalletCurrencyDirective } from '../../directives/wallet-currency.directive';
 import { WalletModel } from '../../models/wallet.model';
 import { RefundDialog } from '../refund-dialog/refund-dialog';
-import { WalletApi } from '../../services/wallet-api';
 
 @Component({
   imports: [WalletCurrencyDirective, RefundDialog],
@@ -24,7 +23,7 @@ export class Wallet {
   selectWallet(wallet: WalletModel) {
     this.selectedWallet.set(wallet);
   }
-  handleRefundSuccess( ):void {
+  handleRefundSuccess():void {
     this.refundSuccess.set(true);
     this.selectedWallet.set(null)
   }

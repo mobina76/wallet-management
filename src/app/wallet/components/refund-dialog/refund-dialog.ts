@@ -1,23 +1,29 @@
 import { Component, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { WalletModel } from '../../models/wallet.model';
-import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import { lessThanBalanceValidator, positiveAmountValidator } from '../../validators/refund.validator';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import {
+  lessThanBalanceValidator,
+  positiveAmountValidator,
+} from '../../validators/refund.validator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefundRequest, RefundType } from '../../models/refund.model';
 import { RefundApi } from '../../services/refund-api';
-import { startWith } from 'rxjs';
+import { finalize, startWith } from 'rxjs';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgxMaskDirective],
   selector: 'app-refund-dialog',
   styleUrl: './refund-dialog.css',
   templateUrl: './refund-dialog.html',
+  providers: [provideNgxMask()],
 })
 export class RefundDialog implements OnInit {
   readonly wallet = input.required<WalletModel>();
   readonly close = output<void>();
   readonly success = output<void>();
-  readonly isSubmit = signal(false);
+  readonly isSubmitting = signal(false);
+  readonly submitError = signal<string | null>(null);
   private readonly refundApi = inject(RefundApi);
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
@@ -52,7 +58,7 @@ export class RefundDialog implements OnInit {
   }
 
   submitRefund(): void {
-    if (this.refundForm.invalid) {
+    if (this.refundForm.invalid || this.isSubmitting()) {
       this.refundForm.markAllAsTouched();
       return;
     }
@@ -60,6 +66,7 @@ export class RefundDialog implements OnInit {
     if (refundData.amount === null) {
       return;
     }
+
     const request: RefundRequest = {
       walletId: this.wallet().id,
       type: refundData.type,
@@ -69,18 +76,28 @@ export class RefundDialog implements OnInit {
       request.reason = refundData.reason;
     } else {
       request.shippingAddress = refundData.shippingAddress;
+
+      if (refundData.reason.trim()) {
+        request.reason = refundData.reason;
+      }
     }
-    this.isSubmit.set(true);
-    this.refundApi.requestRefund(request).subscribe({
-      next: () => {
-        this.success.emit()
-      },
-      error: () => {
-        this.isSubmit.set(false);
-      },
-      complete: () => {
-        this.isSubmit.set(false);
-      },
-    });
+    this.submitError.set(null);
+    this.isSubmitting.set(true);
+    this.refundApi
+      .requestRefund(request)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isSubmitting.set(false);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success.emit();
+        },
+        error: () => {
+          this.submitError.set('Refund Request Failed');
+        },
+      });
   }
 }
