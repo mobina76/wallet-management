@@ -1,32 +1,25 @@
-import { WalletModel, WalletFilters } from '../models/wallet.model';
+import { WalletFilters } from '../models/wallet.model';
 import { computed, inject, Service, signal } from '@angular/core';
 import { WalletApi } from '../services/wallet-api';
-import { readonly } from '@angular/forms/signals';
+import { rxResource } from '@angular/core/rxjs-interop';
 
-interface WalletState {
-  wallets: WalletModel[];
-  isLoading: boolean;
-  error: boolean;
-  filters: WalletFilters;
-}
 @Service({ autoProvided: false })
 export class WalletStore {
   private readonly walletData = inject(WalletApi);
-  private readonly store = signal<WalletState>({
-    wallets: [],
-    isLoading: false,
-    error: false,
-    filters: {
-      currency: 'ALL',
-      status: 'ALL',
-    },
+  private readonly filters = signal<WalletFilters>({
+    currency: 'ALL',
+    status: 'ALL',
+  });
+  readonly walletsResource = rxResource({
+    stream: () => this.walletData.getWallets(),
   });
   readonly filteredWallets = computed(() => {
-    const { wallets, filters } = this.state();
-
+    const wallets = this.walletsResource.hasValue()
+    ? this.walletsResource.value()
+      :[]
+    const filters = this.filters();
     return wallets.filter((wallet) => {
       const currencyMatched = filters.currency === 'ALL' || wallet.currency === filters.currency;
-
       const statusMatched =
         filters.status === 'ALL' ||
         (filters.status === 'active' && wallet.isActive) ||
@@ -35,54 +28,17 @@ export class WalletStore {
       return currencyMatched && statusMatched;
     });
   });
-  readonly state = this.store.asReadonly();
-  constructor() {
-    this.loadWallets();
-  }
-  loadWallets() {
-    this.store.update((currentState) => ({
-      ...currentState,
-      isLoading: true,
-      error: false,
+  setCurrencyFilter(currency: WalletFilters['currency']):void {
+    this.filters.update((filters) => ({
+      ...filters,
+      currency,
     }));
-    this.walletData.getWallets().subscribe({
-      next: (wallets) => {
-        this.store.update((currentState) => ({
-          ...currentState,
-          wallets,
-        }));
-      },
-      error: () => {
-        this.store.update((currentState) => ({
-          ...currentState,
-          isLoading: false,
-          error: true,
-        }));
-      },
-      complete: () => {
-        this.store.update((currentState) => ({
-          ...currentState,
-          isLoading: false,
-        }));
-      },
-    });
-  }
-  setCurrencyFilter(currency: WalletFilters['currency']) {
-    this.store.update((currentState) => ({
-      ...currentState,
-      filters: {
-        ...currentState.filters,
-        currency,
-      },
-    }));
+
   }
   setStatusFilter(status: WalletFilters['status']): void {
-    this.store.update((currentState) => ({
-      ...currentState,
-      filters: {
-        ...currentState.filters,
+      this.filters.update((filters)=>({
+        ...filters,
         status,
-      },
-    }));
+      }))
   }
 }
