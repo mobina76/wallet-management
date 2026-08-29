@@ -40,7 +40,7 @@
           mask="separator.2"
           thousandSeparator=","
           decimalMarker="."
-          class="w-full rounded-lg border px-3 py-2"
+          class="w-full rounded-lg border px-3 py-2 invalid-touched:border-red-400"
         />
          @let amount = refundForm.controls.amount;
         @if (amount.touched) {
@@ -75,7 +75,7 @@
           <textarea
             id="reason"
             formControlName="reason"
-            class="w-full rounded-lg border px-3 py-2"
+            class="w-full rounded-lg border px-3 py-2 invalid-touched:border-red-400"
           ></textarea>
 
           @let reason = refundForm.controls.reason;
@@ -98,7 +98,7 @@
           <textarea
             id="shippingAddress"
             formControlName="shippingAddress"
-            class="w-full rounded-lg border px-3 py-2"
+            class="w-full rounded-lg border px-3 py-2 invalid-touched:border-red-400"
           ></textarea>
 
           @let shippingAddress = refundForm.controls.shippingAddress;
@@ -129,7 +129,7 @@
         <button
           type="submit"
           class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
-          [disabled]="isSubmitting() && refundForm.invalid"
+          [disabled]="isSubmitting() || refundForm.invalid"
         >
           {{ isSubmitting() ? 'Please wait...' : 'Refund' }}
         </button>
