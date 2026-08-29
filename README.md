@@ -1,59 +1,54 @@
-# WalletManagement
+Wallet Management
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.6.
+A small wallet management feature built with Angular 22.
 
-## Development server
+The application displays wallets, supports filtering and balance visibility, and allows users to submit refund requests for active wallets.
 
-To start a local development server, run:
+Getting Started
 
-```bash
-ng serve
-```
+Install dependencies:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+npm install
 
-## Code scaffolding
+Run the application:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+npm start
 
-```bash
-ng generate component component-name
-```
+Then open:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+http://localhost:4200
 
-```bash
-ng generate --help
-```
+Implementation Notes
 
-## Building
+* Built with Angular 22 using standalone components.
+* Wallet data and refund requests are provided through mock API services using RxJS Observables with simulated network delay.
+* rxResource is used to manage wallet loading, error, and data states.
+* Signals are used for local UI state and derived state.
+* A feature-scoped WalletStore manages wallet data, filters, and filtered wallet results.
+* Signal Forms are used for wallet filters.
+* Reactive Forms are used for the refund form and conditional validation.
+* Custom validators are used to validate positive refund amounts and ensure the amount is less than the selected wallet balance.
+* A custom directive handles currency-specific wallet styling.
+* Angular CurrencyPipe is used to format wallet balances.
+* ngx-mask is used to format refund amounts.
+* takeUntilDestroyed is used for subscription lifecycle management.
 
-To build the project run:
+Assumptions
 
-```bash
-ng build
-```
+* Balance visibility applies to all wallet cards at once.
+* Refunds can only be initiated for active wallets.
+* Online refunds require a reason.
+* Physical refunds require a shipping address, while the reason is optional.
+* The refund amount must be greater than zero and strictly less than the wallet balance.
+* A successful refund request does not modify the wallet balance because balance mutation was not specified as part of the challenge.
+* Mock API services return deterministic successful responses by default. Error states are handled by the UI and can be verified by temporarily returning an error Observable from the mock service.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Project Structure
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+src/app/wallet/
+├── components/
+├── directives/
+├── models/
+├── services/
+├── store/
+└── validators/
