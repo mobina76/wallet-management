@@ -19,27 +19,32 @@ walletStore.walletsResource.value().length === 0) {
     No wallets available.
   </div>
 } @else {
-  <div class="mb-4 flex items-center justify-between gap-4">
-    <select
-      class="rounded-lg border px-3 py-2"
-      [formField]="walletStore.filterForm.currency"
-    >
-      <option value="ALL">All currencies</option>
-      <option value="EUR">EUR</option>
-      <option value="USD">USD</option>
-      <option value="IRR">IRR</option>
-    </select>
-    <select
-      class="rounded-lg border px-3 py-2"
-      [formField]="walletStore.filterForm.status"
-    >
-      <option value="ALL">All status</option>
-      <option value="active">Active</option>
-      <option value="inactive">Inactive</option>
-    </select>
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3">
+    <div class="flex flex-wrap items-center gap-2">
+      <select
+        class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700  focus:outline-none"
+        class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700  focus:outline-none"
+        [formField]="walletStore.filterForm.currency"
+      >
+        <option value="ALL">All currencies</option>
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+        <option value="IRR">IRR</option>
+      </select>
+
+      <select
+        class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700  focus:outline-none"
+        [formField]="walletStore.filterForm.status"
+      >
+        <option value="ALL">All status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+
     <button
       type="button"
-      class="rounded-lg border px-4 py-2"
+      class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
       (click)="toggleBalance()"
     >
       {{ showBalance() ? 'Hide balance' : 'Show balance' }}
@@ -56,35 +61,44 @@ walletStore.walletsResource.value().length === 0) {
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       @for (wallet of walletStore.filteredWallets(); track wallet.id) {
         <div walletCurrency
-             [currency]="wallet.currency" class="rounded-xl border p-4">
+             [currency]="wallet.currency"
+             class="rounded-2xl border p-5 shadow-sm transition-shadow hover:shadow-md"
+             [class.opacity-60]="!wallet.isActive">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">
               {{ wallet.name }}
             </h2>
 
-            <span class="text-sm">
-        {{ wallet.isActive ? 'Active' : 'Inactive' }}
-      </span>
+            <span
+              class="rounded-full px-2.5 py-0.5 text-xs font-medium"
+              [class.bg-green-100]="wallet.isActive"
+              [class.text-green-700]="wallet.isActive"
+              [class.bg-gray-100]="!wallet.isActive"
+              [class.text-gray-500]="!wallet.isActive"
+            >
+    {{ wallet.isActive ? 'Active' : 'Inactive' }}
+           </span>
           </div>
 
-          <div class="mt-4 space-y-2">
-            <p>
-              Currency:
-              <span class="font-medium">{{ wallet.currency }}</span>
+          <div class="mt-4 space-y-1.5">
+            <p class="text-sm text-gray-500">
+              Currency <span class="font-medium text-gray-800">{{ wallet.currency }}</span>
             </p>
-            <p>
-              Balance:
+            <p class="text-sm text-gray-500">
+              Balance
               @if (showBalance()) {
-                <span class="font-medium">{{ wallet.balance | currency: wallet.currency }}</span>
+                <span class="block text-xl font-semibold text-gray-900">
+        {{ wallet.balance | currency: wallet.currency }}
+      </span>
               } @else {
-                <span class="font-medium">••••••</span>
+                <span class="block text-xl font-semibold text-gray-900">••••••</span>
               }
             </p>
           </div>
           @if (wallet.isActive) {
             <button
               type="button"
-              class="mt-4 rounded-lg border px-4 py-2"
+              class="mt-4 rounded-lg border px-4 py-2 transition-colors hover:bg-gray-50"
               (click)="selectWallet(wallet)"
             >
               Refund
@@ -95,8 +109,8 @@ walletStore.walletsResource.value().length === 0) {
     </div>
   }
   @if (refundSuccess()) {
-    <p class="mb-4 rounded-lg border p-3">
-      Refund Submitted Seccessfully
+    <p class="mt-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-green-700">
+      Refund Submitted Successfully
     </p>
   }
   @if (selectedWallet(); as wallet) {

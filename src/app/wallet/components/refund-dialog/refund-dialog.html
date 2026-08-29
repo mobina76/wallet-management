@@ -1,14 +1,11 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
   <div class="w-full max-w-md rounded-xl bg-white p-6">
-    <h2 class="text-xl font-semibold">
-      Request Refund
-    </h2>
-
-    <p class="mt-2 text-sm">
-      Wallet: {{ wallet().name }}
-    </p>
+    <div class="border-b pb-4">
+      <h2 class="text-xl font-semibold">Request Refund</h2>
+      <p class="mt-1 text-sm text-gray-500">Wallet: {{ wallet().name }}</p>
+    </div>
     <form [formGroup]="refundForm"
-          class="mt-4"
+          class="mt-4 space-y-5"
           (ngSubmit)="submitRefund()"
     >
       <p class="mb-2 font-medium">Refund Type</p>
@@ -28,7 +25,7 @@
       />
         Physical
     </label>
-      <div class="mt-4">
+      <div>
         <label
           for="amount"
           class="mb-1 block font-medium"
@@ -67,7 +64,7 @@
         }
       </div>
 
-        <div class="mt-4">
+        <div>
           <label
             for="reason"
             class="mb-1 block font-medium"
@@ -124,17 +121,17 @@
       <div class="mt-6 flex justify-end gap-3">
         <button
           type="button"
-          class="mt-4 rounded-lg border px-4 py-2"
+          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
           (click)="close.emit()"
         >
           Cancel
         </button>
         <button
           type="submit"
-          class="mt-4 rounded-lg border px-4 py-2"
+          class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
           [disabled]="isSubmitting()"
         >
-          {{ isSubmitting()? 'Please wait..':'Refund'}}
+          {{ isSubmitting() ? 'Please wait...' : 'Refund' }}
         </button>
       </div>
 
