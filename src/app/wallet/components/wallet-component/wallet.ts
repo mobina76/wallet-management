@@ -28,5 +28,8 @@ export class Wallet {
   handleRefundSuccess(): void {
     this.refundSuccess.set(true);
     this.selectedWallet.set(null);
+    setTimeout(() => {
+      this.refundSuccess.set(false);
+    }, 3000);
   }
 }
