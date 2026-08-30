@@ -2,7 +2,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function positiveAmountValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
-  if (value === null) {
+  if (value === null || value === '') {
     return null;
   }
   if (value <= 0) {
@@ -14,7 +14,7 @@ export function positiveAmountValidator(control: AbstractControl): ValidationErr
 export function lessThanBalanceValidator(balance: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
-    if (value === null) {
+    if (value === null || value === '') {
       return null;
     }
     if (value >= balance) {
