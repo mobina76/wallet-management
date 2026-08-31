@@ -7,7 +7,7 @@
     <div class="min-w-0 flex-1">
       <p class="dialog-eyebrow">Secure refund</p>
       <h2 mat-dialog-title id="refund-dialog-title">Request a refund</h2>
-      <p class="dialog-subtitle">Review the wallet and choose how you want to receive it.</p>
+      <p class="dialog-subtitle">Choose the amount and delivery method.</p>
     </div>
 
     <button
@@ -51,23 +51,11 @@
         </mat-button-toggle-group>
       </fieldset>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Refund amount</mat-label>
-        <span matTextPrefix>{{ wallet.currency }}&nbsp;</span>
-        <input
-          matInput
-          type="number"
-          inputmode="decimal"
-          step="0.01"
-          autocomplete="off"
-          placeholder="0.00"
-          [formField]="refundForm.amount"
-        />
-        <mat-hint>Must be lower than {{ wallet.balance | currency: wallet.currency }}</mat-hint>
-        @if (refundForm.amount().touched() && refundForm.amount().invalid()) {
-          <mat-error>{{ refundForm.amount().errors()[0]?.message }}</mat-error>
-        }
-      </mat-form-field>
+      <app-currency-amount-input
+        [currency]="wallet.currency"
+        [maximumLabel]="maximumAmountLabel"
+        [formField]="refundForm.amount"
+      />
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>
@@ -75,7 +63,7 @@
         </mat-label>
         <textarea
           matInput
-          rows="3"
+          rows="2"
           placeholder="Add a short explanation"
           [formField]="refundForm.reason"
         ></textarea>
@@ -90,7 +78,7 @@
           <mat-label>Shipping address</mat-label>
           <textarea
             matInput
-            rows="3"
+            rows="2"
             autocomplete="street-address"
             placeholder="Street, city, postal code"
             [formField]="refundForm.shippingAddress"

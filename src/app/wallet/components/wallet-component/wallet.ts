@@ -59,7 +59,7 @@ export class Wallet {
       RefundDialog,
       {
         data: { wallet },
-        width: '560px',
+        width: '480px',
         maxWidth: 'calc(100vw - 24px)',
         maxHeight: 'calc(100vh - 24px)',
         panelClass: 'refund-dialog-panel',

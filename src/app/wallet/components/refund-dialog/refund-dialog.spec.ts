@@ -45,4 +45,18 @@ describe('RefundDialog', () => {
     expect(component.refundForm.reason().required()).toBe(false);
     expect(component.refundForm.shippingAddress().required()).toBe(true);
   });
+
+  it.each([
+    ['12,50', 12.5],
+    ['۱۲٫۵۰', 12.5],
+  ])('should parse localized decimal amount %s', (rawAmount, expectedAmount) => {
+    const amountInput = fixture.nativeElement.querySelector(
+      'app-currency-amount-input input',
+    ) as HTMLInputElement;
+
+    amountInput.value = rawAmount;
+    amountInput.dispatchEvent(new Event('input'));
+
+    expect(component.refundForm.amount().value()).toBe(expectedAmount);
+  });
 });

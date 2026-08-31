@@ -21,6 +21,7 @@ import { firstValueFrom } from 'rxjs';
 import { RefundRequest, RefundType } from '../../models/refund.model';
 import { WalletModel } from '../../models/wallet.model';
 import { RefundApi } from '../../services/refund-api';
+import { CurrencyAmountInput } from './currency-amount-input';
 
 export interface RefundDialogData {
   wallet: WalletModel;
@@ -38,6 +39,7 @@ interface RefundFormModel {
 @Component({
   imports: [
     CurrencyPipe,
+    CurrencyAmountInput,
     FormField,
     MatButtonModule,
     MatButtonToggleModule,
@@ -58,6 +60,10 @@ export class RefundDialog {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly wallet = this.dialogData.wallet;
+  readonly maximumAmountLabel = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: this.wallet.currency,
+  }).format(this.wallet.balance);
   readonly submitError = signal<string | null>(null);
   private readonly refundModel = signal<RefundFormModel>({
     type: 'online',
