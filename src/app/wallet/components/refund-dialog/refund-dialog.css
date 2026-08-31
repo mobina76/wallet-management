@@ -1,0 +1,213 @@
+:host {
+  display: block;
+}
+
+.dialog-shell {
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  background:
+    radial-gradient(circle at 88% 0%, rgb(255 255 255 / 55%), transparent 32%),
+    linear-gradient(135deg, #eff6ff 0%, #eef2ff 52%, #faf5ff 100%);
+  border-bottom: 1px solid rgb(148 163 184 / 20%);
+}
+
+.dialog-icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  box-shadow: 0 12px 30px rgb(79 70 229 / 24%);
+}
+
+.dialog-eyebrow {
+  margin: 0 0 0.2rem;
+  color: #4f46e5;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[mat-dialog-title] {
+  margin: 0;
+  padding: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dialog-subtitle {
+  margin: 0.25rem 0 0;
+  color: #64748b;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+mat-dialog-content {
+  padding: 1.25rem 1.5rem 0 !important;
+}
+
+.wallet-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.1rem;
+  background: #f8fafc;
+}
+
+.wallet-mark {
+  display: grid;
+  width: 2.7rem;
+  height: 2.7rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.9rem;
+  color: #4338ca;
+  background: #e0e7ff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.wallet-name,
+.wallet-caption,
+.wallet-balance {
+  margin: 0;
+}
+
+.wallet-name {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wallet-caption {
+  margin-top: 0.15rem;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.wallet-balance {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.refund-form {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+
+.method-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.method-fieldset legend {
+  margin-bottom: 0.55rem;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.method-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.9rem;
+}
+
+.method-toggle mat-button-toggle {
+  width: 100%;
+}
+
+.method-toggle mat-icon {
+  margin-right: 0.35rem;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-banner,
+.security-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  border-radius: 0.9rem;
+  font-size: 0.8rem;
+}
+
+.error-banner {
+  padding: 0.8rem;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.error-banner div {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.security-note {
+  align-items: center;
+  color: #475569;
+}
+
+.security-note mat-icon {
+  color: #16a34a;
+  font-size: 1.1rem;
+}
+
+mat-dialog-actions {
+  gap: 0.5rem;
+  padding: 1rem 1.5rem 1.4rem !important;
+}
+
+mat-dialog-actions [mat-flat-button] {
+  min-width: 10.5rem;
+}
+
+mat-dialog-actions mat-spinner {
+  display: inline-block;
+  margin-right: 0.45rem;
+}
+
+@media (max-width: 520px) {
+  .dialog-header,
+  mat-dialog-content,
+  mat-dialog-actions {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+  }
+
+  .wallet-summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .wallet-balance {
+    width: 100%;
+    padding-left: 3.55rem;
+  }
+}

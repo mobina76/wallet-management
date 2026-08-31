@@ -1,4 +1,4 @@
-import {  Directive, input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { WalletCurrency } from '../models/wallet.model';
 
 @Directive({
