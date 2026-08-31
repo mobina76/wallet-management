@@ -1,120 +1,213 @@
-@if (walletStore.walletsResource.isLoading()) {
-  <div class="flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-8 text-center">
-    <p class="font-medium text-gray-600">Loading wallets...</p>
-  </div>
-} @else if (walletStore.walletsResource.error()) {
-  <div class="flex flex-col items-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-6 py-8 text-center">
-    <p class="font-medium text-red-700">Failed to load wallets</p>
-    <button
-      type="button"
-      class="mt-2 rounded-lg border border-red-300 bg-white px-4 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100"
-      (click)="walletStore.walletsResource.reload()"
-    >
-      Retry
-    </button>
-  </div>
-} @else if (walletStore.walletsResource.hasValue() &&
-walletStore.walletsResource.value()?.length === 0) {
-  <div class="flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-8 text-center">
-    <p class="font-medium text-gray-600">No wallets available.</p>
-  </div>
-} @else {
-  <div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3">
-    <div class="flex flex-wrap items-center gap-2">
-      <select
-        class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700  focus:outline-none"
-        [formField]="walletStore.filterForm.currency"
-      >
-        <option value="ALL">All currencies</option>
-        <option value="EUR">EUR</option>
-        <option value="USD">USD</option>
-        <option value="IRR">IRR</option>
-      </select>
-
-      <select
-        class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700  focus:outline-none"
-        [formField]="walletStore.filterForm.status"
-      >
-        <option value="ALL">All status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
-    </div>
-
-    <button
-      type="button"
-      class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-      (click)="toggleBalance()"
-    >
-      {{ showBalance() ? 'Hide balance' : 'Show balance' }}
-    </button>
+<main class="min-h-screen overflow-hidden bg-slate-950 px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
+  <div class="pointer-events-none fixed inset-0 opacity-90" aria-hidden="true">
+    <div class="absolute -left-32 top-12 h-96 w-96 rounded-full bg-blue-600/25 blur-3xl"></div>
+    <div class="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-violet-600/20 blur-3xl"></div>
   </div>
 
-  @if (walletStore.filteredWallets().length === 0) {
+  <div class="relative mx-auto max-w-6xl">
+    <header class="mb-8 flex flex-col gap-6 text-white sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <div
+          class="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-blue-100 backdrop-blur"
+        >
+          <mat-icon class="text-base">account_balance_wallet</mat-icon>
+          WALLET MANAGEMENT
+        </div>
+        <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Your wallets</h1>
+        <p class="mt-2 max-w-xl text-sm leading-6 text-slate-300">
+          Track balances, filter accounts and submit refunds from one secure workspace.
+        </p>
+      </div>
 
-    <div class="rounded-lg border p-4 text-center text-gray-500">
-      No wallets match with your filters.
-    </div>
-
-  } @else {
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      @for (wallet of walletStore.filteredWallets(); track wallet.id) {
-        <div walletCurrency
-             [currency]="wallet.currency"
-             class="rounded-2xl border p-5 shadow-sm transition-shadow hover:shadow-md"
-             [class.opacity-60]="!wallet.isActive">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold">
-              {{ wallet.name }}
-            </h2>
-
-            <span
-              class="rounded-full px-2.5 py-0.5 text-xs font-medium"
-              [class.bg-green-100]="wallet.isActive"
-              [class.text-green-700]="wallet.isActive"
-              [class.bg-gray-100]="!wallet.isActive"
-              [class.text-gray-500]="!wallet.isActive"
-            >
-    {{ wallet.isActive ? 'Active' : 'Inactive' }}
-           </span>
+      @if (walletStore.walletsResource.hasValue()) {
+        <div class="flex gap-3">
+          <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
+            <span class="block text-2xl font-bold">{{ walletCount() }}</span>
+            <span class="text-xs text-slate-300">Total wallets</span>
           </div>
-
-          <div class="mt-4 space-y-1.5">
-            <p class="text-sm text-gray-500">
-              Currency <span class="font-medium text-gray-800">{{ wallet.currency }}</span>
-            </p>
-            <p class="text-sm text-gray-500">
-              Balance
-              @if (showBalance()) {
-                <span class="block text-xl font-semibold text-gray-900">
-        {{ wallet.balance | currency: wallet.currency }}
-      </span>
-              } @else {
-                <span class="block text-xl font-semibold text-gray-900">••••••</span>
-              }
-            </p>
+          <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
+            <span class="block text-2xl font-bold text-emerald-300">
+              {{ activeWalletCount() }}
+            </span>
+            <span class="text-xs text-slate-300">Active</span>
           </div>
-          @if (wallet.isActive) {
-            <button
-              type="button"
-              class="mt-4 rounded-lg border px-4 py-2 transition-colors hover:bg-gray-50"
-              (click)="selectWallet(wallet)"
-            >
-              Refund
-            </button>
-          }
         </div>
       }
-    </div>
-  }
-  @if (refundSuccess()) {
-    <p class="mt-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-green-700">
-      Refund Submitted Successfully
-    </p>
-  }
-  @if (selectedWallet(); as wallet) {
-    <app-refund-dialog [wallet]="wallet"
-                       (success)="handleRefundSuccess()"
-                       (close)="selectedWallet.set(null)" />
-  }
-}
+    </header>
+
+    <section
+      class="rounded-[2rem] border border-white/10 bg-slate-50/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6"
+    >
+      @if (walletStore.walletsResource.isLoading()) {
+        <div class="grid min-h-72 place-items-center text-center">
+          <div>
+            <mat-spinner class="mx-auto" diameter="42" />
+            <p class="mt-4 font-semibold text-slate-700">Loading your wallets</p>
+            <p class="mt-1 text-sm text-slate-500">This will only take a moment.</p>
+          </div>
+        </div>
+      } @else if (walletStore.walletsResource.error()) {
+        <div class="grid min-h-72 place-items-center text-center">
+          <div class="max-w-sm">
+            <div
+              class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-red-100 text-red-600"
+            >
+              <mat-icon>cloud_off</mat-icon>
+            </div>
+            <h2 class="mt-4 text-xl font-bold">We could not load your wallets</h2>
+            <p class="mt-2 text-sm text-slate-500">
+              Check your connection and try the request again.
+            </p>
+            <button
+              mat-flat-button
+              type="button"
+              class="mt-5"
+              (click)="walletStore.walletsResource.reload()"
+            >
+              <mat-icon>refresh</mat-icon>
+              Try again
+            </button>
+          </div>
+        </div>
+      } @else if (
+        walletStore.walletsResource.hasValue() && walletStore.walletsResource.value().length === 0
+      ) {
+        <div class="grid min-h-72 place-items-center text-center">
+          <div>
+            <mat-icon class="scale-150 text-slate-400">account_balance_wallet</mat-icon>
+            <p class="mt-4 font-semibold text-slate-700">No wallets available</p>
+          </div>
+        </div>
+      } @else {
+        <div
+          class="mb-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div class="grid gap-3 sm:grid-cols-2">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Currency</mat-label>
+              <mat-icon matPrefix>payments</mat-icon>
+              <mat-select [formField]="walletStore.filterForm.currency">
+                <mat-option value="ALL">All currencies</mat-option>
+                <mat-option value="EUR">Euro · EUR</mat-option>
+                <mat-option value="USD">US Dollar · USD</mat-option>
+                <mat-option value="IRR">Iranian Rial · IRR</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Status</mat-label>
+              <mat-icon matPrefix>tune</mat-icon>
+              <mat-select [formField]="walletStore.filterForm.status">
+                <mat-option value="ALL">All statuses</mat-option>
+                <mat-option value="active">Active</mat-option>
+                <mat-option value="inactive">Inactive</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <button
+            mat-stroked-button
+            type="button"
+            matTooltip="Toggle all balance values"
+            (click)="toggleBalance()"
+          >
+            <mat-icon>{{ showBalance() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            {{ showBalance() ? 'Hide balances' : 'Show balances' }}
+          </button>
+        </div>
+
+        @if (walletStore.filteredWallets().length === 0) {
+          <div
+            class="grid min-h-52 place-items-center rounded-2xl border border-dashed border-slate-300 bg-white text-center"
+          >
+            <div>
+              <mat-icon class="text-slate-400">filter_alt_off</mat-icon>
+              <p class="mt-2 font-semibold text-slate-700">No matching wallets</p>
+              <p class="mt-1 text-sm text-slate-500">Try a different currency or status.</p>
+            </div>
+          </div>
+        } @else {
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            @for (wallet of walletStore.filteredWallets(); track wallet.id) {
+              <article
+                walletCurrency
+                [currency]="wallet.currency"
+                class="wallet-card group relative overflow-hidden"
+                [class.inactive-wallet]="!wallet.isActive"
+              >
+                <div class="card-orbit card-orbit-one" aria-hidden="true"></div>
+                <div class="card-orbit card-orbit-two" aria-hidden="true"></div>
+
+                <div class="relative flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="card-chip" aria-hidden="true"><span></span></div>
+                    <div>
+                      <p class="card-label">DIGITAL WALLET</p>
+                      <p class="card-currency">{{ wallet.currency }}</p>
+                    </div>
+                  </div>
+                  <span
+                    class="card-status inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
+                  >
+                    <span
+                      class="h-1.5 w-1.5 rounded-full"
+                      [class.bg-emerald-500]="wallet.isActive"
+                      [class.bg-slate-400]="!wallet.isActive"
+                    ></span>
+                    {{ wallet.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+
+                <div class="relative mt-7">
+                  <p class="card-balance-label">Available balance</p>
+                  <p class="card-balance">
+                    @if (showBalance()) {
+                      {{ wallet.balance | currency: wallet.currency }}
+                    } @else {
+                      <span class="balance-mask" aria-label="Balance hidden">••••••</span>
+                    }
+                  </p>
+                  <div class="mt-5 flex items-end justify-between gap-3">
+                    <div>
+                      <p class="card-meta-label">Wallet name</p>
+                      <p class="card-name">{{ wallet.name }}</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="card-meta-label">Reference</p>
+                      <p class="card-reference">•••• {{ wallet.id.padStart(4, '0') }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-actions">
+                  @if (wallet.isActive) {
+                    <span class="card-ready">Ready for refund</span>
+                    <button
+                      class="refund-button"
+                      mat-flat-button
+                      type="button"
+                      (click)="openRefundDialog(wallet)"
+                    >
+                      Refund
+                      <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                    </button>
+                  } @else {
+                    <span class="inline-flex items-center gap-1 text-xs text-slate-500">
+                      <mat-icon class="text-base">lock</mat-icon>
+                      Refunds are unavailable
+                    </span>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        }
+      }
+    </section>
+
+    <footer class="mt-5 flex items-center justify-center gap-2 text-xs text-slate-400">
+      <mat-icon class="text-sm">verified_user</mat-icon>
+      Secure wallet workspace
+    </footer>
+  </div>
+</main>

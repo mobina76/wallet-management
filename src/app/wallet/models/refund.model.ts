@@ -1,8 +1,17 @@
-export type RefundType =  'online' | 'physical'
-export interface RefundRequest {
-  walletId : string;
-  type : RefundType;
-  amount : number;
-  reason?: string;
-  shippingAddress?: string;
+export type RefundType = 'online' | 'physical';
+
+interface RefundRequestBase {
+  walletId: string;
+  amount: number;
 }
+
+export type RefundRequest =
+  | (RefundRequestBase & {
+      type: 'online';
+      reason: string;
+    })
+  | (RefundRequestBase & {
+      type: 'physical';
+      shippingAddress: string;
+      reason?: string;
+    });

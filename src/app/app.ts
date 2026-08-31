@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { Wallet } from './wallet/components/wallet-component/wallet';
 
 @Component({
@@ -7,6 +7,4 @@ import { Wallet } from './wallet/components/wallet-component/wallet';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('wallet-management');
-}
+export class App {}

@@ -1,3 +1,43 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant invalid-touched (&.ng-invalid.ng-touched);
+
+html {
+  min-width: 320px;
+  background: #020617;
+}
+
+body {
+  min-height: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.refund-dialog-backdrop {
+  background: rgb(15 23 42 / 68%) !important;
+  backdrop-filter: blur(8px);
+}
+
+.refund-dialog-panel .mat-mdc-dialog-surface {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 60%);
+  border-radius: 1.75rem !important;
+  box-shadow: 0 32px 90px rgb(15 23 42 / 38%) !important;
+}
+
+.wallet-success-snackbar .mdc-snackbar__surface {
+  color: #ecfdf5 !important;
+  background: #065f46 !important;
+  border: 1px solid rgb(167 243 208 / 25%);
+  border-radius: 0.9rem !important;
+  box-shadow: 0 18px 50px rgb(15 23 42 / 25%);
+}
+
+.wallet-success-snackbar .mat-mdc-snack-bar-action {
+  color: #a7f3d0 !important;
+}

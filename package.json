@@ -11,13 +11,14 @@
   "private": true,
   "packageManager": "npm@11.17.0",
   "dependencies": {
+    "@angular/cdk": "^22.1.4",
     "@angular/common": "^22.1.0",
     "@angular/compiler": "^22.1.0",
     "@angular/core": "^22.1.0",
     "@angular/forms": "^22.1.0",
+    "@angular/material": "^22.1.4",
     "@angular/platform-browser": "^22.1.0",
     "@angular/router": "^22.1.0",
-    "ngx-mask": "^22.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

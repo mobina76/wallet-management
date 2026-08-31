@@ -1,142 +1,128 @@
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-  <div class="w-full max-w-md rounded-xl bg-white p-6">
-    <div class="border-b pb-4">
-      <h2 class="text-xl font-semibold">Request Refund</h2>
-      <p class="mt-1 text-sm text-gray-500">Wallet: {{ wallet().name }}</p>
+<div class="dialog-shell">
+  <header class="dialog-header">
+    <div class="dialog-icon" aria-hidden="true">
+      <mat-icon>currency_exchange</mat-icon>
     </div>
-    <form [formGroup]="refundForm"
-          class="mt-4 space-y-5"
-          (ngSubmit)="submitRefund()"
+
+    <div class="min-w-0 flex-1">
+      <p class="dialog-eyebrow">Secure refund</p>
+      <h2 mat-dialog-title id="refund-dialog-title">Request a refund</h2>
+      <p class="dialog-subtitle">Choose the amount and delivery method.</p>
+    </div>
+
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Close refund dialog"
+      [disabled]="refundForm().submitting()"
+      [mat-dialog-close]="undefined"
     >
-      <p class="mb-2 font-medium">Refund Type</p>
-      <label class="mr-4">
-        <input
-          type="radio"
-          value="online"
-          formControlName="type"
-        />
-        Online
-      </label>
-      <label>
-      <input
-        type="radio"
-        value="physical"
-        formControlName="type"
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <mat-dialog-content>
+    <section class="wallet-summary" aria-label="Selected wallet">
+      <div class="wallet-mark" aria-hidden="true">{{ wallet.currency }}</div>
+      <div class="min-w-0 flex-1">
+        <p class="wallet-name">{{ wallet.name }}</p>
+        <p class="wallet-caption">Available balance</p>
+      </div>
+      <p class="wallet-balance">{{ wallet.balance | currency: wallet.currency }}</p>
+    </section>
+
+    <form id="refund-form" class="refund-form" (submit)="$event.preventDefault(); submitRefund()">
+      <fieldset class="method-fieldset">
+        <legend>Refund method</legend>
+        <mat-button-toggle-group
+          class="method-toggle"
+          aria-label="Refund method"
+          hideSingleSelectionIndicator
+          [formField]="refundForm.type"
+        >
+          <mat-button-toggle value="online">
+            <mat-icon>bolt</mat-icon>
+            Online
+          </mat-button-toggle>
+          <mat-button-toggle value="physical">
+            <mat-icon>local_shipping</mat-icon>
+            Physical
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </fieldset>
+
+      <app-currency-amount-input
+        [currency]="wallet.currency"
+        [maximumLabel]="maximumAmountLabel"
+        [formField]="refundForm.amount"
       />
-        Physical
-    </label>
-      <div>
-        <label
-          for="amount"
-          class="mb-1 block font-medium"
-        >
-          Amount
-        </label>
 
-        <input
-          id="amount"
-          type="text"
-          formControlName="amount"
-          mask="separator.2"
-          thousandSeparator=","
-          decimalMarker="."
-          class="w-full rounded-lg border px-3 py-2 invalid-touched:border-red-400"
-        />
-         @let amount = refundForm.controls.amount;
-        @if (amount.touched) {
-          @if (amount.hasError('required')) {
-            <p class="mt-1 text-sm text-red-600">
-              Amount is required.
-            </p>
-          }
-
-          @if (amount.hasError('positiveAmount')) {
-            <p class="mt-1 text-sm text-red-600">
-              Amount must be greater than zero.
-            </p>
-          }
-
-          @if (amount.hasError('lessThanBalance')) {
-            <p class="mt-1 text-sm text-red-600">
-              Amount must be less than wallet balance.
-            </p>
-          }
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>
+          {{ refundForm.type().value() === 'online' ? 'Reason' : 'Reason (optional)' }}
+        </mat-label>
+        <textarea
+          matInput
+          rows="2"
+          placeholder="Add a short explanation"
+          [formField]="refundForm.reason"
+        ></textarea>
+        <mat-hint align="end">{{ refundForm.reason().value().length }}/300</mat-hint>
+        @if (refundForm.reason().touched() && refundForm.reason().invalid()) {
+          <mat-error>{{ refundForm.reason().errors()[0]?.message }}</mat-error>
         }
-      </div>
+      </mat-form-field>
 
-        <div>
-          <label
-            for="reason"
-            class="mb-1 block font-medium"
-          >
-            Reason
-          </label>
-
+      @if (refundForm.type().value() === 'physical') {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Shipping address</mat-label>
           <textarea
-            id="reason"
-            formControlName="reason"
-            class="w-full rounded-lg border px-3 py-2 invalid-touched:border-red-400"
+            matInput
+            rows="2"
+            autocomplete="street-address"
+            placeholder="Street, city, postal code"
+            [formField]="refundForm.shippingAddress"
           ></textarea>
-
-          @let reason = refundForm.controls.reason;
-
-          @if (reason.touched && reason.hasError('required')) {
-            <p class="mt-1 text-sm text-red-600">
-              Reason is required.
-            </p>
+          <mat-icon matSuffix>location_on</mat-icon>
+          <mat-hint align="end">{{ refundForm.shippingAddress().value().length }}/500</mat-hint>
+          @if (refundForm.shippingAddress().touched() && refundForm.shippingAddress().invalid()) {
+            <mat-error>{{ refundForm.shippingAddress().errors()[0]?.message }}</mat-error>
           }
-        </div>
-      @if (refundForm.controls.type.value === 'physical') {
-        <div class="mt-4">
-          <label
-            for="shippingAddress"
-            class="mb-1 block font-medium"
-          >
-            Shipping Address
-          </label>
+        </mat-form-field>
+      }
 
-          <textarea
-            id="shippingAddress"
-            formControlName="shippingAddress"
-            class="w-full rounded-lg border px-3 py-2 invalid-touched:border-red-400"
-          ></textarea>
-
-          @let shippingAddress = refundForm.controls.shippingAddress;
-
-          @if (
-            shippingAddress.touched &&
-            shippingAddress.hasError('required')
-            ) {
-            <p class="mt-1 text-sm text-red-600">
-              Shipping Address is required.
-            </p>
-          }
+      @if (submitError(); as error) {
+        <div class="error-banner" role="alert" aria-live="assertive">
+          <mat-icon aria-hidden="true">error_outline</mat-icon>
+          <div>
+            <strong>Refund not submitted</strong>
+            <span>{{ error }}</span>
+          </div>
         </div>
       }
-      @if(submitError(); as error){
-        <p class="mt-4 rounded-lg border border-red-300 p-3 text-sm text-red-600">
-          {{ error }}
-        </p>
-      }
-      <div class="mt-6 flex justify-end gap-3">
-        <button
-          type="button"
-          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          (click)="close.emit()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
-          [disabled]="isSubmitting() || refundForm.invalid"
-        >
-          {{ isSubmitting() ? 'Please wait...' : 'Refund' }}
-        </button>
-      </div>
 
+      <div class="security-note">
+        <mat-icon aria-hidden="true">shield</mat-icon>
+        <span>Your request is validated before it is sent.</span>
+      </div>
     </form>
+  </mat-dialog-content>
 
-  </div>
-
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      [disabled]="refundForm().submitting()"
+      [mat-dialog-close]="undefined"
+    >
+      Cancel
+    </button>
+    <button mat-flat-button type="submit" form="refund-form" [disabled]="refundForm().submitting()">
+      @if (refundForm().submitting()) {
+        <mat-spinner progressIndicator diameter="18" />
+      }
+      <mat-icon>arrow_forward</mat-icon>
+      {{ refundForm().submitting() ? 'Submitting...' : 'Submit refund' }}
+    </button>
+  </mat-dialog-actions>
 </div>
